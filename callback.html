@@ -1,0 +1,57 @@
+<html>
+<head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+
+    <style>
+        body {
+            font-family: Roboto, sans-serif;
+            background: #f1f1f1;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body onload="getAuthCode();">
+<script type="text/javascript">
+
+    var authCode = getParameterByName('code');
+    var errorCode = getParameterByName('error');
+    var errorDescroption=getParameterByName('error_description');
+    function getAuthCode(){
+        getErrorCode(errorCode)
+        window.opener.authorization_code = authCode;
+        $("#authCode", window.opener.document).text(authCode);
+        $("#authCode2", window.opener.document).text(authCode);
+
+
+    }
+
+    function getErrorCode(err) {
+        if (err != "") {
+            alert (error_description)
+            return
+        }
+    }
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    
+
+
+
+</script>
+<h2>Authorization Successful.</h2>
+(You can close this window. We'll add the authorization code to the tables on the previous screen.)
+</body>
+</html>
