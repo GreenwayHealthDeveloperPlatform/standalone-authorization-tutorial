@@ -339,7 +339,7 @@
                         that your
                         app establishes with the authorization server. This is a security measure to protect against
                         Cross Site Request Forgery
-                        (CSRF). In response, the authorization server displays a
+                        (CSRF).<br />In response, the authorization server displays a
                         consent screen. Once the user grants consent, the authorization server provides your app with an
                         authorization code. <br /><b>Press the Get button to see what your app transmits, and then grant
                             your consent on the pop up screen in order to obtain a code.</b></p>
@@ -406,7 +406,7 @@
                     <pre style="text-align: left"
                         class="authcode-url"><span id="redirectUri1">https://redirect-url</span>?code=<span class="authCode">. . .</span>&amp;state=<span id="responseState">. . .</span></pre>
 
-                    <p style="text-align: left">First, your app
+                    <p style="text-align: left;line-height: 1.4;">First, your app
                         should verify that
                         the <code>state</code> value received matches what you sent in the previous step to protect
                         against CSRF
