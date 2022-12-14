@@ -2,16 +2,23 @@ body {
     font-family: Roboto, sans-serif;
     background: #f1f1f1;
 }
-table, th, td {
+
+
+table,
+th,
+td {
     border: 1px solid black;
     border-collapse: collapse;
 }
-th, td {
+
+th,
+td {
     padding: 5px;
     text-align: left;
     font-size: small;
 
 }
+
 .box {
     width: 900px;
     color: #000000;
@@ -26,6 +33,7 @@ th, td {
     box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
 }
+
 .box_inside {
     width: auto;
     background-color: #ffffff;
@@ -33,18 +41,20 @@ th, td {
     border-radius: 5px;
 }
 
-h2.box, h2.box_head {
+h2.box,
+h2.box_head {
     text-align: left;
     font-family: Roboto Light, Roboto, sans-serif;
     font-size: 20px;
     color: #555555;
     margin-top: 4px;
 }
+
 button {
     font-family: Roboto, sans-serif;
     display: inline;
     background-color: #007CBE;
-    color: #E6F2F9; 
+    color: #E6F2F9;
     font-weight: 600;
     font-size: 1.475rem;
     text-align: center;
@@ -60,6 +70,7 @@ button {
     white-space: nowrap;
     /*transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;*/
 }
+
 /*button:hover 
 {
     color: #007CBE;
@@ -79,16 +90,19 @@ button {
     align-items: center;
     padding: 0 15px 0 15px;
 }
+
 .layout-topbar .logo {
     font-size: 20px;
     color: #ffffff;
     font-family: Roboto Light, Roboto, sans-serif;
 }
+
 .layout-topbar .logo__bold {
     font-family: Roboto Bold, Roboto, sans-serif;
     color: #ffffff;
 
 }
+
 .layout-topbar .logo__rtitle {
     font-size: 20px;
     color: #ffffff;
@@ -98,26 +112,55 @@ button {
 .layout-content {
     margin-top: 110px;
 }
+
 /* Ripple effect */
 .ripple {
     background-position: center;
     transition: background 0.2s, color 0.2s
-    /*transition: background-color 0.4s, color 0.4s, border-color 0.4s, box-shadow 0.4s;*/
+        /*transition: background-color 0.4s, color 0.4s, border-color 0.4s, box-shadow 0.4s;*/
 
-  }
-  .ripple:hover {
+}
+
+.ripple:hover {
     background: #E6F2F9 radial-gradient(circle, transparent 5%, #007CBE 1%) center/15000%;
-    color:#007CBE;
-  }
-  .ripple:active {
-    background-color: #7ea2b6 ;
+    color: #007CBE;
+}
+
+.ripple:active {
+    background-color: #7ea2b6;
     background-size: 100%;
     transition: background 0s;
-    color:#E6F2F9;
+    color: #E6F2F9;
 
-  }
-  
-  /* Button style 
+}
+
+pre {
+    -webkit-overflow-scrolling: touch;
+    background-color: whitesmoke;
+    color: #4a4a4a;
+    font-size: 0.875em;
+    overflow-x: auto;
+    padding: 1.25rem 1.5rem;
+    white-space: pre;
+    word-wrap: normal;
+}
+
+pre code {
+    background-color: transparent;
+    color: currentColor;
+    font-size: 1em;
+    padding: 0;
+}
+
+code {
+    background-color: whitesmoke;
+    color: #4a4a4a;
+    font-size: 0.875em;
+    font-weight: normal;
+    padding: 0.25em 0.5em 0.25em;
+}
+
+/* Button style 
   button {
     border: none;
     border-radius: 2px;
@@ -130,4 +173,3 @@ button {
     box-shadow: 0 0 4px #999;
     outline: none;
   }*/
-  

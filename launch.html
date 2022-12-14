@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
@@ -10,13 +11,14 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="demo.css" />
 
 
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"
+        integrity="sha512-oVbWSv2O4y1UzvExJMHaHcaib4wsBMS5tEP3/YkMP6GmkwRJAa79Jwsv+Y/w7w2Vb/98/Xhvck10LyJweB8Jsw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </head>
 
@@ -43,11 +45,11 @@
     //Authorization Params
     var client_id = "MGMzYzliNjYtNzI2Yi00MmI3LThmNzUtYmMyMTkzN2I0ZWQ2";
     var response_type = "code";
-    //var scopes = "patient/Observation.read patient/Patient.read launch/patient fhirUser openid online_access";
     var scopes = "launch/patient openid fhirUser online_access patient/Patient.read patient/Observation.read"
     // DEVELOPER: enter your IP address below
     var redirect_uri =
         "https://greenwayhealthdeveloperplatform.github.io/standalone-authorization-tutorial/callback.html";
+
 
     function getRandomState() {
         const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -78,15 +80,17 @@
         // < !--STEP 1 -->
         $("#launchURL").text(window.location.href);
         $("#iss").text(iss);
+        $("#aud").text(iss);
         $("#launchId").text(launchId);
         $("#endpointDiscoveryURL").text(endpointDiscoveryURL);
-        $("#clientId").text(client_id);
+        $("#clientId1").text(client_id);
         $("#clientId2").text(client_id);
         $("#responseType").text(response_type);
         $("#scopes").text(scopes);
         $("#state").text(state);
         $("#grantType").text(grant_type);
-        $("#redirectUri").text(redirect_uri);
+        $("#redirectUri1").text(redirect_uri);
+        $("#redirectUri2").text(redirect_uri);
         $('a[href^="#"]').on('click', function (e) {
             e.preventDefault();
 
@@ -127,26 +131,38 @@
                                 (nextExtensionName.indexOf("authorize") != -1) { authorizationEndpoint = nextExtension; } else if
                                 (nextExtensionName.indexOf("token") != -1) { tokenEndpoint = nextExtension; }
                             $("#authorizationEndpoint1").text(authorizationEndpoint);
-                            $("#authorizationEndpoint2").text(authorizationEndpoint); $("#tokenEndpoint1").text(tokenEndpoint);
+                            $("#authorizationEndpoint2").text(authorizationEndpoint);
+                            $("#authorizationEndpoint3").text(authorizationEndpoint); $("#tokenEndpoint1").text(tokenEndpoint);
                             $("#tokenEndpoint2").text(tokenEndpoint); //< !--STEP 3 -->
+                            $("#tokenEndpoint3").text(tokenEndpoint);
+                            authText =
+                                "response_type=" + response_type + "\n" +
+                                "&client_id=" + client_id + "\n" +
+                                "&scope=" + scopes.replace(/ /g, "+") + "\n" +
+                                "&aud=" + iss + "\n" +
+                                "&redirect_uri" + redirect_uri + "\n" +
+                                "&state=" + state
+                            $("#authQueryString").text(authText);
+
                         }
                 }
             }
         }, "json");
     }
+
+    //< !--STEP 3 -->
     function callAuthorizationEndpoint() {
-        /*var authorizationURL = authorizationEndpoint + encodeURI("?client_id=" + client_id +
-        "&response_type=" +
-        response_type + "&scope=" + scopes + "&launch=" + launchId + "&aud=" + iss + "&redirect_uri=" +
-        redirect_uri +
-        "&state=" + state);*/
         var authorizationURL = authorizationEndpoint + encodeURI("?client_id=" + client_id +
             "&response_type=" +
             response_type + "&scope=" + scopes + "&aud=" + iss + "&redirect_uri=" + redirect_uri + "&state=" +
             state);
-
-        alert(authorizationURL);
-        newPopup(authorizationURL);
+        var mAlert = "<div style='word-break: break-all;'><code>" + authorizationURL + "</code></div>"
+        bootbox.alert({
+            size: 'extra-large', title: "Authorization Code Request", message: mAlert, callback: function
+                () {
+                newPopup(authorizationURL);
+            }
+        });
     }
 
 
@@ -160,7 +176,7 @@
                 dataType: "json",
                 type: 'POST',
                 data: {
-                    code: $("#authCode2").text(),
+                    code: $("#authCode").text(),
                     grant_type: grant_type,
                     redirect_uri: redirect_uri,
                     client_id: client_id
@@ -182,8 +198,9 @@
                 $("#accessToken2").text(access_token);
                 $("#tokenType").text(token_type);
                 $("#expiresIn").text(expires_in);
-                $("#scope").text(scope);
+                $("#scope1").text(scope);
                 $("#patientId").text(patient_id);
+                $("#tokenResponse").text(JSON.stringify(resp, null, 2));
                 $("#fhirRESTDataService").text(fhirDataService);
             }).fail(function () {
                 console.log("failed");
@@ -198,26 +215,38 @@
 
     function showAccessToken() {
         if (access_token != null) {
-            console.log("ACCESS TOKEN: " + access_token);
-            console.log("ACCESS TOKEN: " + id_token);
 
-            alert(access_token);
+
+            var mAlert = "<div style='word-break: break-all;'><code>" + access_token + "</code></div>"
+            bootbox.alert({
+                size: 'extra-large', title: "Access Token", message: mAlert
+            });
         }
         else {
-            alert("No access token has been acquired!");
+            bootbox.alert({
+                size: 'extra-large', title: "Access Token", message: "No access token has been acquired!"
+            });
+
         }
     }
+    // < !--STEP 5 -->
 
     function showTokenAuthHeader() {
         if (access_token != null) {
-            console.log("Authorization: Bearer " + access_token);
-            alert("Authorization: Bearer " + access_token);
-
+            var mAlert = "<div style='word-break: break-all;'><code>Authorization: Bearer "
+                + access_token + "</code></div>"
+            bootbox.alert({
+                size: 'extra-large', title: "Authorization Header", message: mAlert
+            });
         }
         else {
-            alert("No access token has been acquired!");
+            bootbox.alert({
+                size: 'extra-large', title: "Access Token", message: "No access token has been
+                                acquired!"
+                                });
         }
     }
+    // < !--STEP 5 -->
 
     function callDataPopup() {
         newPopup("data.html");
@@ -240,12 +269,13 @@
                 class="logo__rtitle">Authorization Tutorial</span>
         </div>
         <div class="layout-content">
-            <div id="appLaunch" class=box>
+            <div id="appLaunch" class="box">
                 <div class="box_inside">
                     <h2 class="box_head">STEP 1: Launch</h2>
-                    <p style="text-align: left">When you launched this app, a special URI was used which is shown
+                    <p style="text-align: left;line-height: 1.4;">When you launched this app, a special URI was used
+                        which is shown
                         here.<br />
-                        The 'Endpoint' value refers to the FHIR endpoint from which data will be retrieved.<br />
+                        The 'Endpoint' value refers to the FHIR endpoint from which data will be retrieved.<br /></p>
                     <table class="table table-bordered">
                         <tr>
                             <td>App launch URI:</td>
@@ -256,7 +286,7 @@
                             <td id="iss" style="font-weight: bold"></td>
                         </tr>
                     </table>
-                    <a href="#endpointDiscoveryInfo">Next step</a>
+                    <a class='linkscroll' href="#endpointDiscoveryInfo">Next step</a>
                 </div>
             </div>
             <br />
@@ -265,7 +295,8 @@
             <div id="endpointDiscoveryInfo" class=box>
                 <div class="box_inside">
                     <h2 class="box_head">STEP 2: Endpoint Discovery</h2>
-                    <p style="text-align: left">In this step, your app obtains the Conformance Statement from the FHIR
+                    <p style="text-align: left;line-height: 1.4;">In this step, your app obtains the Conformance
+                        Statement from the FHIR
                         endpoint. This file contains the authentication servers from which your app obtains the
                         authentication code which it then exchanges for the token. <br /><b>Press the Get button to
                             retrieve the Conformance Statement and display the authorization code/token endpoints.</b>
@@ -296,27 +327,40 @@
             <div id="authorizationInfo" class=box>
                 <div class="box_inside">
                     <h2 class="box_head">STEP 3: Get Authorization Code</h2>
-                    <p style="text-align: left">In this first half of the authorization, your app identifies itself to
+                    <p style="text-align: left;line-height: 1.4;">In this first half of the authorization, your app
+                        identifies itself to
                         the authorization code endpoint using its client ID and the scopes it desires in order to access
-                        clinical data. It also provides a 'state' value that identifies the session context that your
-                        app establishes with the authorization server. In response, the authorization server displays a
+                        clinical data. Your app also provides a <code>state</code> value that identifies the session
+                        context
+                        that your
+                        app establishes with the authorization server. This is a security measure to protect against
+                        Cross Site Request Forgery
+                        (CSRF). In response, the authorization server displays a
                         consent screen. Once the user grants consent, the authorization server provides your app with an
                         authorization code. <br /><b>Press the Get button to see what your app transmits, and then grant
                             your consent on the pop up screen in order to obtain a code.</b></p>
                     <table class="table table-bordered">
                         <tr>
-                            <td><button class="ripple"
+                            <td style="vertical-align: middle;"><button class="ripple"
                                     onclick="callAuthorizationEndpoint();">Get</button>&nbsp;&nbsp;Authorization
                                 Endpoint:</td>
-                            <td id="authorizationEndpoint2"></td>
+                            <td id="authorizationEndpoint2" style="vertical-align: middle;">
+                                http://auth-endpoint/auth-code</td>
                         </tr>
+                    </table>
+                    <p style="text-align: left;"><b>Authorization URL</b></p>
+                    <pre style="text-align: left" class="authcode-url">
+<span id="authorizationEndpoint3">https://auth-endpoint/auth-code</span>?
+<span id="authQueryString">...</span>
+                    </pre>
+                    <table class="table table-bordered">
                         <tr>
                             <td style="font-weight: bold">URL Parameters</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>client_id</td>
-                            <td style="font-weight: bold" id="clientId"></td>
+                            <td style="font-weight: bold" id="clientId1"></td>
                         </tr>
                         <tr>
                             <td>response_type</td>
@@ -335,7 +379,7 @@
                         </tr>
                         <tr>
                             <td>Returned Authorization Code</td>
-                            <td style="font-weight: bold" id="authCode"></td>
+                            <td style="font-weight: bold" id="authCode" class="authCode"></td>
                         </tr>
                     </table>
                     <a class='linkscroll' href="#tokenInfo">Next step</a>
@@ -348,23 +392,49 @@
             <div id="tokenInfo" class=box>
                 <div class="box_inside">
                     <h2 class="box_head">STEP 4: Acquire Access Token</h2>
-                    <p style="text-align: left">This is the second half of the authorization process. Your app transmits
-                        the code obtained in Step 3 and, in exchange, your app receives a token that it uses to
-                        authenticate itself to receive FHIR data. <br /><b>Press the Post button to get a token, and
+                    <p style="text-align: left;line-height: 1.4;">This is the second half of the authorization process.
+                        After
+                        authenticating the user and getting user consent for the scopes, the authorization server has
+                        redirected the user back to your app; passing it an authorization <code>code</code> and the
+                        <code>state</code> parameter
+                        it received from your app.
+                    </p>
+                    <pre style="text-align: left"
+                        class="authcode-url"><span id="redirectUri1">https://redirect-url</span>?code=<span class="authCode">. . .</span>&amp;state=<span id="responseState">. . .</span></pre>
+
+                    <p style="text-align: left">First, your app
+                        should verify that
+                        the <code>state</code> value received matches what you sent in the previous step to protect
+                        against CSRF
+                        attacks.<br /> If it matches, your app posts
+                        the <code>code</code> obtained in Step 3 along with the parameters below, and, in exchange, your
+                        app receives a token that it
+                        uses to
+                        authenticate itself to receive FHIR data, as well as a number of claims that enable your app to
+                        function, such as <code>patient</code>.<br /><b>Press the Post button to get a token, and
                             then if desired, press Show to see the token itself.</b></p>
                     <table class="table table-bordered">
                         <tr>
-                            <td><button class="ripple" onclick="callTokenEndpoint();">Post</button>&nbsp;&nbsp;Token
+                            <td style="vertical-align: middle;"><button class="ripple"
+                                    onclick="callTokenEndpoint();">Post</button>&nbsp;&nbsp;Token
                                 Endpoint:</td>
-                            <td id="tokenEndpoint2"></td>
+                            <td id="tokenEndpoint2" style="vertical-align: middle;"></td>
                         </tr>
+                    </table>
+                    <p style="text-align: left;"><b>POST Request</b></p>
+
+                    <pre style="text-align: left" class="authcode-url">POST <span id="tokenEndpoint3">https://token-endpoint</span>
+<span id="tokenPostPayload">...</span></pre>
+
+
+                    <table class="table table-bordered">
                         <tr>
                             <td style="font-weight: bold">POST Parameters</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>authorization_code</td>
-                            <td style="font-weight: bold" id="authCode2"></td>
+                            <td style="font-weight: bold" class="authCode"></td>
                         </tr>
                         <tr>
                             <td>grant_type</td>
@@ -372,14 +442,24 @@
                         </tr>
                         <tr>
                             <td>redirectUri</td>
-                            <td style="font-weight: bold" id="redirectUri"></td>
+                            <td style="font-weight: bold" id="redirectUri2"></td>
                         </tr>
                         <tr>
                             <td>client_id</td>
                             <td style="font-weight: bold" id="clientId2"></td>
                         </tr>
+                    </table>
+                    <p style="text-align: left;"><b>POST Response</b></p>
+
+                    <pre style="text-align: left" class="authcode-url"><span id="tokenResponse">{
+                            
+                        
+                        
+                       
+}</span></pre>
+                    <table class="table table-bordered">
                         <tr>
-                            <td style="font-weight: bold">POST Response</td>
+                            <td style="font-weight: bold">Response Parameters</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -396,7 +476,7 @@
                         </tr>
                         <tr>
                             <td>scope</td>
-                            <td style="font-weight: bold" id="scope"></td>
+                            <td style="font-weight: bold" id="scope1"></td>
                         </tr>
                         <tr>
                             <td>patient</td>
@@ -413,9 +493,11 @@
             <div id="dataInfo" class=box>
                 <div class="box_inside">
                     <h2 class="box_head">STEP 5: Retrieve Data</h2>
-                    <p style="text-align: left">Your app uses the token above to call the FHIR server.<br /><b>Press Get
+                    <p style="text-align: left;line-height: 1.4;">Your app uses the token and the <code>patient</code>
+                        claim received in
+                        the previous step to call the FHIR server to retrieve data.<br /><b>Press Get
                             to retrieve and view the data retrieved. Optionally press Show to see the authorization
-                            header.</b></p>
+                            header that includes the token.</b></p>
                     <table class="table table-bordered">
                         <tr>
                             <td><button class="ripple" onclick="callDataPopup();">Get</button>&nbsp;&nbsp;FHIR API:</td>
