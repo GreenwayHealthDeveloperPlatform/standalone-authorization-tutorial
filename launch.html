@@ -233,17 +233,21 @@
 
     function showTokenAuthHeader() {
         if (access_token != null) {
-            var mAlert = "<div style='word-break: break-all;'><code>Authorization: Bearer "
+
+
+            var mAlert = "<div style='word-break: break-all;'><code>+Authorization: Bearer "
                 + access_token + "</code></div>"
             bootbox.alert({
                 size: 'extra-large', title: "Authorization Header", message: mAlert
             });
         }
         else {
+
             bootbox.alert({
-                size: 'extra-large', title: "Access Token", message: "No access token has been
-                                acquired!"
-                                });
+                size: 'extra-large', title: "Access Token", message: "No access token" +
+                    " has been acquired!"
+            });
+
         }
     }
     // < !--STEP 5 -->
